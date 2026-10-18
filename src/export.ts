@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { PlaceData } from './types.js';
 
-async function exportData() {
+export async function exportData(): Promise<{ records: PlaceData[]; jsonPath: string; csvPath: string; count: number; csvContent: string }> {
     const datasetDir = path.resolve(process.cwd(), 'storage/datasets/default');
 
     try {
@@ -10,7 +10,7 @@ async function exportData() {
     } catch {
         console.error(`❌ Dataset directory not found at: ${datasetDir}`);
         console.log('Run the scraper first using `npm run start:dev` to generate data.');
-        return;
+        return { records: [], jsonPath: '', csvPath: '', count: 0, csvContent: '' };
     }
 
     const files = await fs.readdir(datasetDir);
@@ -18,7 +18,7 @@ async function exportData() {
 
     if (jsonFiles.length === 0) {
         console.log('⚠️ No JSON records found in storage/datasets/default.');
-        return;
+        return { records: [], jsonPath: '', csvPath: '', count: 0, csvContent: '' };
     }
 
     const records: PlaceData[] = [];
@@ -88,6 +88,16 @@ async function exportData() {
     const csvContent = [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
     await fs.writeFile(csvPath, csvContent, 'utf-8');
     console.log(`✅ Saved CSV (for Excel): ${csvPath}`);
+
+    return { records, jsonPath, csvPath, count: records.length, csvContent };
 }
 
-exportData().catch(console.error);
+// Run directly if invoked from CLI
+const isDirectRun = process.argv[1] && (
+    process.argv[1].replace(/\\/g, '/').endsWith('src/export.ts') ||
+    process.argv[1].replace(/\\/g, '/').endsWith('dist/export.js')
+);
+if (isDirectRun) {
+    exportData().catch(console.error);
+}
+

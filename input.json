@@ -1,8 +1,9 @@
 {
   "searchQueries": [
-    "hotels in vadapalani"
+    "software companies in austin"
   ],
-  "maxPlacesPerQuery": 10,
+  "startUrls": [],
+  "maxPlacesPerQuery": 6,
   "maxReviews": 2,
   "maxImages": 0,
   "language": "en",

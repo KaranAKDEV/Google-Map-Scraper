@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps Scraper Pro — Lead Generation & Business Intelligence</title>
+    <meta name="description" content="Production-grade Google Maps crawler & intelligence platform. Extract business contacts, verified emails, phone numbers, ratings, and social profiles with precision.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-theme">
+    <!-- Ambient Background Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <div class="app-layout">
+        <!-- Top Navigation Bar -->
+        <header class="app-header">
+            <div class="header-container">
+                <div class="brand">
+                    <div class="brand-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                            <circle cx="12" cy="9" r="2.5" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="brand-title">
+                            <span>MapIntel</span>
+                            <span class="badge-pro">PRO v1.0</span>
+                        </div>
+                        <p class="brand-subtitle">Google Maps Business & Email Lead Scraper</p>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <button id="themeToggleBtn" class="btn btn-ghost btn-sm btn-theme-toggle" title="Switch Theme (Light / Dark)" aria-label="Toggle Theme">
+                        <svg class="theme-icon-sun" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg class="theme-icon-moon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                        <span class="theme-label">Theme</span>
+                    </button>
+
+                    <div id="statusBadge" class="status-pill status-idle">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Engine Ready</span>
+                    </div>
+
+                    <button id="headerExportCsvBtn" class="btn btn-secondary btn-sm" title="Quick CSV Export">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <span>Export CSV</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <main class="main-content">
+            <!-- Left Panel: Input Configuration & Scraping Controls -->
+            <aside class="control-panel">
+                <form id="scraperForm" class="glass-card config-card">
+                    <div class="card-header">
+                        <div class="header-icon-wrapper">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Search Configuration</h2>
+                            <p class="card-desc">Define targets, location queries, and extraction depth</p>
+                        </div>
+                    </div>
+
+                    <!-- Highlighted Search Queries Field -->
+                    <div class="form-group form-group-highlight">
+                        <div class="highlight-label-bar">
+                            <label for="queryInput" class="form-label form-label-highlight">
+                                <span class="label-with-icon">
+                                    <svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" stroke-width="2.5" fill="none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                    Search Queries
+                                </span>
+                                <span class="required-badge">REQUIRED • START HERE</span>
+                            </label>
+                        </div>
+                        <div class="tag-input-container highlighted-tag-container" id="queryTagsWrapper">
+                            <div class="tags-list" id="queryTagsList"></div>
+                            <input type="text" id="queryInput" class="tag-input" placeholder="Type target keyword or city (e.g. gym in new york) & press Enter...">
+                            <button type="button" id="addQueryBtn" class="btn-tag-add" title="Add Query">+</button>
+                        </div>
+                        <div class="preset-chips">
+                            <span class="preset-label">Quick Presets:</span>
+                            <button type="button" class="chip" data-preset="gym in new york">Gyms NYC</button>
+                            <button type="button" class="chip" data-preset="specialty coffee in seattle">Cafes Seattle</button>
+                            <button type="button" class="chip" data-preset="real estate agency in miami">Real Estate Miami</button>
+                            <button type="button" class="chip" data-preset="software companies in austin">Tech Austin</button>
+                            <button type="button" class="chip" data-preset="dentists in chicago">Dentists Chicago</button>
+                        </div>
+                    </div>
+
+                    <!-- Direct Google Maps URLs -->
+                    <div class="form-group">
+                        <label for="startUrlsInput" class="form-label">
+                            <span>Direct Google Maps URLs <span class="optional-tag">(Optional)</span></span>
+                        </label>
+                        <textarea id="startUrlsInput" class="form-textarea" rows="2" placeholder="Paste specific Google Maps URLs (one per line)"></textarea>
+                    </div>
+
+                    <!-- Numeric Parameters Grid -->
+                    <div class="form-row-grid">
+                        <div class="form-group">
+                            <div class="form-label-row">
+                                <label for="maxPlacesSlider" class="form-label">Max Places / Query</label>
+                                <span id="maxPlacesVal" class="value-bubble">20</span>
+                            </div>
+                            <input type="range" id="maxPlacesSlider" min="1" max="200" value="20" step="1" class="slider">
+                            <div class="slider-ticks">
+                                <span>1</span>
+                                <span>50</span>
+                                <span>100</span>
+                                <span>200</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-label-row">
+                                <label for="maxReviewsInput" class="form-label">Max Reviews</label>
+                                <span id="maxReviewsVal" class="value-bubble">2</span>
+                            </div>
+                            <input type="range" id="maxReviewsInput" min="0" max="20" value="2" step="1" class="slider">
+                            <div class="slider-ticks">
+                                <span>0 (Fast)</span>
+                                <span>10</span>
+                                <span>20</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Extraction Options & Toggles -->
+                    <div class="toggles-section">
+                        <label class="toggle-card" for="deeperCrawlToggle">
+                            <div class="toggle-info">
+                                <div class="toggle-title-row">
+                                    <span class="toggle-title">Deeper Website Crawl (Emails & Socials)</span>
+                                    <span class="badge-accent">Recommended</span>
+                                </div>
+                                <p class="toggle-desc">Visits business official websites to extract emails, Instagram, LinkedIn, and WhatsApp</p>
+                            </div>
+                            <div class="switch">
+                                <input type="checkbox" id="deeperCrawlToggle" checked>
+                                <span class="slider-round"></span>
+                            </div>
+                        </label>
+
+                        <label class="toggle-card" for="includeWebResultsToggle">
+                            <div class="toggle-info">
+                                <span class="toggle-title">Include Web Search Results</span>
+                                <p class="toggle-desc">Enriches business discovery with additional organic search matches</p>
+                            </div>
+                            <div class="switch">
+                                <input type="checkbox" id="includeWebResultsToggle" checked>
+                                <span class="slider-round"></span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Collapsible Advanced Settings -->
+                    <details class="advanced-settings-accordion">
+                        <summary class="advanced-summary">
+                            <span>
+                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                                Advanced Engine Tuning
+                            </span>
+                            <span class="chevron">▼</span>
+                        </summary>
+                        <div class="advanced-body">
+                            <div class="form-row-grid">
+                                <div class="form-group">
+                                    <label for="languageSelect" class="form-label">Maps Language</label>
+                                    <select id="languageSelect" class="form-select">
+                                        <option value="en" selected>English (en)</option>
+                                        <option value="es">Spanish (es)</option>
+                                        <option value="fr">French (fr)</option>
+                                        <option value="de">German (de)</option>
+                                        <option value="it">Italian (it)</option>
+                                        <option value="pt">Portuguese (pt)</option>
+                                        <option value="ja">Japanese (ja)</option>
+                                        <option value="ar">Arabic (ar)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label-row">
+                                        <label for="concurrencySlider" class="form-label">Concurrency (Threads)</label>
+                                        <span id="concurrencyVal" class="value-bubble">3</span>
+                                    </div>
+                                    <input type="range" id="concurrencySlider" min="1" max="10" value="3" step="1" class="slider">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="proxyUrlsInput" class="form-label">
+                                    <span>Proxy URLs (Optional)</span>
+                                    <span class="label-hint">One per line</span>
+                                </label>
+                                <textarea id="proxyUrlsInput" class="form-textarea" rows="2" placeholder="http://user:password@proxy.example.com:8080"></textarea>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Primary Action Buttons -->
+                    <div class="action-buttons-group">
+                        <button type="submit" id="startScrapeBtn" class="btn btn-primary btn-glow">
+                            <span class="btn-spinner hidden" id="scrapeSpinner"></span>
+                            <svg class="btn-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            <span id="startBtnText">Launch Scraper</span>
+                        </button>
+
+                        <button type="button" id="stopScrapeBtn" class="btn btn-danger hidden">
+                            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+                            <span>Abort Job</span>
+                        </button>
+                    </div>
+
+                    <!-- Live Progress Indicator (active during scrape) -->
+                    <div id="liveProgressContainer" class="live-progress-container hidden">
+                        <div class="progress-info-row">
+                            <span class="progress-title" id="progressStatusText">Scraping in progress...</span>
+                            <span class="progress-timer" id="elapsedTimer">00:00</span>
+                        </div>
+                        <div class="progress-bar-track">
+                            <div class="progress-bar-fill animated-shimmer" id="progressBarFill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                </form>
+            </aside>
+
+            <!-- Right Panel: KPI Dashboard & Scraped Places Table -->
+            <section class="results-panel">
+                <!-- Metrics Bar -->
+                <div class="kpi-grid">
+                    <div class="kpi-card glass-card">
+                        <div class="kpi-icon-bg icon-places">
+                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
+                        <div class="kpi-details">
+                            <span class="kpi-label">Places Extracted</span>
+                            <span class="kpi-number" id="kpiTotalPlaces">0</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card glass-card">
+                        <div class="kpi-icon-bg icon-emails">
+                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </div>
+                        <div class="kpi-details">
+                            <span class="kpi-label">Emails Discovered</span>
+                            <span class="kpi-number highlight-emerald" id="kpiEmails">0</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card glass-card">
+                        <div class="kpi-icon-bg icon-phones">
+                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        </div>
+                        <div class="kpi-details">
+                            <span class="kpi-label">Direct Phones</span>
+                            <span class="kpi-number" id="kpiPhones">0</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card glass-card">
+                        <div class="kpi-icon-bg icon-rating">
+                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
+                        <div class="kpi-details">
+                            <span class="kpi-label">Average Rating</span>
+                            <span class="kpi-number highlight-amber" id="kpiAvgRating">0.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export & Results Explorer Bar -->
+                <div class="explorer-card glass-card">
+                    <div class="explorer-header">
+                        <div class="search-filter-box">
+                            <div class="search-input-wrap">
+                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                <input type="text" id="filterInput" placeholder="Filter by name, city, category, email...">
+                            </div>
+
+                            <select id="categoryFilter" class="filter-select">
+                                <option value="all">All Categories</option>
+                            </select>
+
+                            <div class="quick-filter-chips">
+                                <label class="chip-filter" for="filterHasEmail">
+                                    <input type="checkbox" id="filterHasEmail">
+                                    <span>Has Email</span>
+                                </label>
+                                <label class="chip-filter" for="filterHasPhone">
+                                    <input type="checkbox" id="filterHasPhone">
+                                    <span>Has Phone</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Export Bar -->
+                        <div class="export-actions-bar">
+                            <div class="view-toggles">
+                                <button id="viewTableBtn" class="btn-toggle active" title="Table View">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+                                </button>
+                                <button id="viewGridBtn" class="btn-toggle" title="Card Grid View">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                </button>
+                            </div>
+
+                            <button id="exportCsvBtn" class="btn btn-export-csv" title="Download formatted CSV spreadsheet">
+                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                <span>Export CSV</span>
+                            </button>
+
+                            <button id="exportJsonBtn" class="btn btn-export-json" title="Download full JSON dataset">
+                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                                <span>Export JSON</span>
+                            </button>
+
+                            <button id="directDeleteResultsBtn" class="btn btn-danger-subtle" title="Delete all scraped results from this dataset">
+                                <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                <span>Delete Results</span>
+                            </button>
+
+                            <div class="dropdown">
+                                <button id="quickActionsBtn" class="btn btn-ghost btn-sm" title="More Outreach Actions">
+                                    <span>Outreach</span>
+                                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
+                                </button>
+                                <div class="dropdown-menu" id="quickActionsMenu">
+                                    <button class="dropdown-item" id="copyAllEmailsBtn">
+                                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                        <span>Copy All Emails</span>
+                                    </button>
+                                    <button class="dropdown-item" id="copyAllPhonesBtn">
+                                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3"/></svg>
+                                        <span>Copy All Phones</span>
+                                    </button>
+                                    <button class="dropdown-item text-danger" id="clearDatasetBtn">
+                                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                        <span>Clear Dataset</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Count Bar -->
+                    <div class="results-status-bar">
+                        <span id="filteredCountText">Showing 0 places</span>
+                        <div class="quick-export-tip">💡 Ready to import into Google Sheets, Excel, or cold outreach CRM</div>
+                    </div>
+
+                    <!-- Table View Container -->
+                    <div class="table-responsive-wrapper" id="tableView">
+                        <table class="leads-table">
+                            <thead>
+                                <tr>
+                                    <th>Business Name</th>
+                                    <th>Category</th>
+                                    <th>Rating</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Website & Social</th>
+                                    <th>Address</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="placesTableBody">
+                                <!-- Populated dynamically -->
+                                <tr class="empty-state-row">
+                                    <td colspan="8">
+                                        <div class="empty-state-box">
+                                            <div class="empty-icon">
+                                                <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="1.5" fill="none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                            </div>
+                                            <h3>No Places Scraped Yet</h3>
+                                            <p>Enter your search terms on the left and click <strong>Launch Scraper</strong> to start gathering business leads.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Card Grid View Container -->
+                    <div class="cards-grid-view hidden" id="cardsGrid">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Place Details Modal / Drawer -->
+    <div class="modal-overlay hidden" id="placeModalOverlay">
+        <div class="modal-card glass-card" id="placeModalCard">
+            <div class="modal-header">
+                <div>
+                    <span class="modal-category" id="modalCategory">Category</span>
+                    <h2 class="modal-title" id="modalTitle">Business Name</h2>
+                </div>
+                <button class="btn-close-modal" id="closeModalBtn" title="Close">×</button>
+            </div>
+
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamically generated sections -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
