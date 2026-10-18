@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+
+# Local crawler storage & state
+storage/
+
+# Scraped results output
+results.json
+results.csv
+
+# Environment & IDE
+.env
+.env.local
+.vscode/
+.idea/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+*.js.map

@@ -1,0 +1,12 @@
+{
+  "searchQueries": [
+    "hotels in vadapalani"
+  ],
+  "maxPlacesPerQuery": 10,
+  "maxReviews": 2,
+  "maxImages": 0,
+  "language": "en",
+  "deeperCrawl": true,
+  "includeWebResults": true,
+  "maxConcurrency": 3
+}
