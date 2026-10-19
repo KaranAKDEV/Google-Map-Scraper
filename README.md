@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🗺️ Google Maps Scraper Pro (MapIntel)
 
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-green.svg)](https://nodejs.org/)
@@ -239,6 +240,23 @@ Google-Map-Scraper/
 2. **Email Crawling Speed:** Deep crawling websites for emails takes 1–3 seconds per place. If you only need phone numbers, addresses, and ratings at maximum speed, uncheck **"Deep Crawl Website for Emails"**.
 3. **Optimizing Concurrency:** For most laptops and standard home connections, `maxConcurrency: 3` to `4` is optimal. If you have 16GB+ RAM and a high-speed connection, you can increase concurrency to `6`.
 4. **Large Batches:** For large scrapes (100+ places), Google may show verification checks if you scrape too aggressively. Keep concurrency moderate and scrape in batches.
+
+---
+
+## ☁️ Deploying on Render.com
+
+This project includes a pre-configured `Dockerfile` built on Microsoft's official Playwright image (`mcr.microsoft.com/playwright:v1.49.0-noble`), with all Linux system libraries and headless Chromium pre-installed.
+
+### Steps to Deploy:
+1. Log in to [Render Dashboard](https://dashboard.render.com/).
+2. Click **New +** → **Web Service**.
+3. Select your repository: `https://github.com/KaranAKDEV/Google-Map-Scraper`.
+4. Under **Runtime**, select **Docker** (Render will automatically detect the root `Dockerfile`).
+5. Leave the default settings:
+   - **Environment:** `Docker`
+   - **Port:** `3000` (detected automatically)
+   - **Plan:** Free (or Starter with 1GB RAM recommended for large batch scrapes)
+6. Click **Create Web Service**.
 
 ---
 

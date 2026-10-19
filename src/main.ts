@@ -16,6 +16,10 @@ import { buildSearchUrl } from './utils.js';
 import { setConfig } from './config.js';
 import { router } from './routes.js';
 
+// Prevent Crawlee memory snapshot overload warnings on cloud instances
+process.env.CRAWLEE_AVAILABLE_MEMORY_RATIO = process.env.CRAWLEE_AVAILABLE_MEMORY_RATIO || '0.9';
+process.env.CRAWLEE_PURGE_ON_START = '0';
+
 // ─── Input Loading ───────────────────────────────────────────────────────────
 
 async function loadInput(): Promise<Record<string, unknown>> {
@@ -87,6 +91,12 @@ const crawler = new PlaywrightCrawler({
     maxRequestRetries: 3,
     requestHandlerTimeoutSecs: 180,
     navigationTimeoutSecs: 60,
+    autoscaledPoolOptions: {
+        desiredConcurrency: input.maxConcurrency,
+        maxConcurrency: input.maxConcurrency,
+        scaleUpStepRatio: 0.2,
+        scaleDownStepRatio: 0.1,
+    },
 
     // ─── Browser configuration ───────────────────────────────────────────
     headless: true,
